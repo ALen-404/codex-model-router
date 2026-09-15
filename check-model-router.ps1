@@ -27,6 +27,8 @@ $script:warn = 0
 
 function Ok   ($m) { Write-Host "  [PASS] $m" -ForegroundColor Green;  $script:pass++ }
 function Bad  ($m) { Write-Host "  [FAIL] $m" -ForegroundColor Red;    $script:fail++ }
+function Fail2($m) { Write-Host "  [FAIL] $m" -ForegroundColor Red;    $script:fail++ }
+function Warn2($m) { Write-Host "  [WARN] $m" -ForegroundColor Yellow; $script:warn++ }
 function Warn ($m) { Write-Host "  [WARN] $m" -ForegroundColor Yellow; $script:warn++ }
 function Head ($m) { Write-Host "`n== $m" -ForegroundColor Cyan }
 
@@ -207,7 +209,32 @@ if ($SkipE2E) {
                 Bad "$($m.slug) -> status=$($resp.status)"
             }
         } catch {
-            Bad "$($m.slug) 请求失败: $($_.Exception.Message)"
+            $msg = $_.Exception.Message
+            # PS 5.1 里 Invoke-RestMethod 的响应体在 ErrorDetails.Message；取不到再退回流
+            $body = ''
+            try { $body = $_.ErrorDetails.Message } catch {}
+            if (-not $body) { try {
+                $resp = $_.Exception.Response
+                if ($resp) {
+                    $sr = New-Object System.IO.StreamReader($resp.GetResponseStream())
+                    $body = $sr.ReadToEnd()
+                }
+            } catch {} }
+            if ($body -match 'insufficient_credits') {
+                # 账户余额问题，不是路由器/配置问题，必须和真故障区分开
+                $bal = '未知'
+                # 注意：路由器会把上游原文当字符串嵌进 error.message，引号是转义的，所以别锚定引号
+                $m2 = [regex]::Match($body, 'current_balance[^0-9]{0,8}([0-9.]+)')
+                if ($m2.Success) { $bal = '$' + $m2.Groups[1].Value }
+                $up = ''
+                if ($routes -and $routes.($m.slug)) { $up = $routes.($m.slug).upstream_base }
+                Fail2 "$($m.slug) 上游账户余额不足（HTTP 402 insufficient_credits，余额 $bal）"
+                Warn2 "  这是 $up 的账户余额问题，不是路由器/配置故障；充值入口见错误里的 buy_credits_url"
+            } elseif ($body -match '401|Unauthorized') {
+                Fail2 "$($m.slug) 上游鉴权失败（401）：检查 $($m.key_env) 是否有效"
+            } else {
+                Bad "$($m.slug) 请求失败: $msg $($body.Substring(0, [Math]::Min(200, $body.Length)))"
+            }
         }
     }
 }

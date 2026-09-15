@@ -405,6 +405,7 @@ powershell -ExecutionPolicy Bypass -File check-model-router.ps1
 | 请求 403 | 上游 Cloudflare：确认 UA 是浏览器 UA（路由器默认已带） |
 | 请求 400 `Invalid input`（chat 通道） | 工具结果里混了图片：查日志有没有 `split N image(s) out of tool result` |
 | 400 `reasoning_content` 相关 | wire=chat 的多轮工具续聊：`ReasoningCache` 是否命中（重启路由器会导致未命中，但有占位兜底不应 400） |
+| 上游报 `402 insufficient_credits` | **账户余额不足，不是路由器/配置故障。** 健康检查会明确标注余额与「不是路由器故障」，充值入口见错误里的 `buy_credits_url`（Cline 是 `app.cline.bot/credits`）。订阅若挂在别的账号/组织下也会表现为余额为 0，可用 `GET /api/v1/users/me` 核对账号身份 |
 | 返回 `incomplete` 而不是 `completed` | 思考模型把 `max_output_tokens` 烧在推理上了。要么加大预算，要么传 `reasoning.effort = "none"` |
 | 400 档位非法 | 请求的 `reasoning.effort` 不在白名单：路由器会夹到最近合法档位 |
 | `--status` 显示健康但 pid 不对 | pid 文件是脏的（手工启动的实例不写它）。安装脚本与健康检查都会按端口占用者自动修正 |
