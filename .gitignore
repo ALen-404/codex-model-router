@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# 运行时产物（由路由器/安装脚本生成，不应入库）
+router.log
+router.out.log
+router.pid
+install-state.json
+
+# 密钥与本地配置：绝对不要提交
+.env
+*.key
+secrets.json
+auth.json
+config.toml
+config.toml.bak-*
+*-probe-local.json
+
+# 编辑器/系统
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
