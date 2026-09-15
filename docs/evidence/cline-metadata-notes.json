@@ -1,0 +1,140 @@
+{
+  "captured_at": "2026-09-15T00:32:19+0800",
+  "purpose": "Cline 上游的登记证据。缺 CLINE_API_KEY 时无法实测，故这里只记录无需鉴权即可获得的事实。",
+  "public_model_list": {
+    "url": "https://api.cline.bot/api/v1/models",
+    "http_status": 200,
+    "total_models": 447,
+    "deepseek_model_ids": [
+      "~deepseek/deepseek-pro-latest",
+      "~deepseek/deepseek-flash-latest",
+      "deepseek/deepseek-v4.1-flash",
+      "deepseek/deepseek-v4-flash-vision-exp",
+      "deepseek/deepseek-v4-flash-vision-exp:batch",
+      "deepseek/deepseek-v4-pro-0813",
+      "deepseek/deepseek-v4-pro-0813:batch",
+      "~deepseek/deepseek-v4-flash-latest",
+      "deepseek/deepseek-v4-flash-0731",
+      "deepseek/deepseek-v4-flash-0731:batch",
+      "deepseek/deepseek-v4-pro",
+      "deepseek/deepseek-v4-flash",
+      "deepseek/deepseek-v3.2",
+      "deepseek/deepseek-v3.2-exp",
+      "deepseek/deepseek-v3.1-terminus",
+      "deepseek/deepseek-chat-v3.1",
+      "deepseek/deepseek-r1-0528",
+      "deepseek/deepseek-chat-v3-0324",
+      "deepseek/deepseek-r1-distill-llama-70b",
+      "deepseek/deepseek-r1",
+      "deepseek/deepseek-chat"
+    ],
+    "target_model": "deepseek/deepseek-v4.1-flash"
+  },
+  "endpoint_probe_without_key": {
+    "note": "三条协议路径都存在，无密钥均 401 -> 鉴权用 Authorization: Bearer <CLINE_API_KEY>",
+    "results": {
+      "POST /api/v1/chat/completions": 401,
+      "POST /api/v1/responses": 401,
+      "POST /api/v1/messages": 401
+    }
+  },
+  "models_dev_cline_pass": {
+    "provider_key": "cline-pass",
+    "model_count": 15,
+    "deepseek/deepseek-v4.1-flash": null,
+    "_caveat": "models.dev 是标称值。opencode 的实测经验：标称 1000000/384000，上游强制 1048576/393216。所以这里仅作对照，最终以上游自报为准。",
+    "all_model_ids": [
+      "cline-pass/qwen3.7-max",
+      "cline-pass/kimi-k2.6",
+      "cline-pass/glm-5.2",
+      "cline-pass/minimax-m3",
+      "cline-pass/deepseek-v4-flash",
+      "cline-pass/kimi-k2.7-code",
+      "cline-pass/deepseek-v4.1-flash",
+      "cline-pass/kimi-k3",
+      "cline-pass/glm-5.3-flash",
+      "cline-pass/qwen3.8-max",
+      "cline-pass/qwen3.7-plus",
+      "cline-pass/deepseek-v4-pro",
+      "cline-pass/glm-5.3",
+      "cline-pass/mimo-v2.5",
+      "cline-pass/mimo-v2.5-pro"
+    ],
+    "target_entry_key": "cline-pass/deepseek-v4.1-flash",
+    "target_entry": {
+      "id": "cline-pass/deepseek-v4.1-flash",
+      "name": "DeepSeek V4.1 Flash",
+      "description": "DeepSeek V4.1 Flash model for reasoning and agentic coding",
+      "family": "deepseek-flash",
+      "attachment": true,
+      "reasoning": true,
+      "reasoning_options": [
+        {
+          "type": "effort",
+          "values": [
+            "none",
+            "low",
+            "medium",
+            "high",
+            "xhigh"
+          ]
+        }
+      ],
+      "tool_call": true,
+      "structured_output": true,
+      "temperature": true,
+      "knowledge": "2025-05",
+      "release_date": "2026-09-10",
+      "last_updated": "2026-09-10",
+      "modalities": {
+        "input": [
+          "text",
+          "image"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "open_weights": true,
+      "limit": {
+        "context": 1000000,
+        "output": 384000
+      },
+      "cost": {
+        "input": 0.15,
+        "output": 0.6,
+        "cache_read": 0.003
+      }
+    }
+  },
+  "status": "已完成接入：模型 slug = deepseek-v4.1-flash-cline（provider=cline, wire=chat）",
+  "measured_results": {
+    "wire": "只有 /chat/completions 可用；/responses 与 /messages 均 404 Not Found",
+    "context_window": 1048576,
+    "context_source": "实测：~1.1M tokens 输入，上游报 \"This model's maximum context length is 1048576 tokens\"",
+    "max_output_tokens": 384000,
+    "max_output_tokens_source": "models.dev 标称（唯一非实测项）：实测网关不校验，max_tokens=5000000 仍返回 200，拿不到强制上限",
+    "supported_reasoning_levels": [
+      "none",
+      "minimal",
+      "low",
+      "medium",
+      "high",
+      "xhigh",
+      "max"
+    ],
+    "reasoning_evidence": "7 档全部 200；none 档 reasoning_tokens=0 且无 reasoning 字段（思考关闭）；max 档推理量最大 94 tokens。models.dev 只声明 5 档(none/low/medium/high/xhigh)，以实测为准",
+    "input_modalities": [
+      "text",
+      "image"
+    ],
+    "image_evidence": "8x8 纯品红 PNG 正确答出 Magenta",
+    "tool_calls": "流式 delta.tool_calls 与非流式 message.tool_calls 均为标准 OpenAI 形状，finish_reason=tool_calls",
+    "shape_differences_from_opencode": {
+      "reasoning_field": "Cline 用 delta.reasoning / message.reasoning（另有 reasoning_details 数组），opencode 用 reasoning_content",
+      "nonstream_wrapper": "Cline 非流式响应包一层 {data:..., success:true}；流式不包",
+      "note": "translate.py 的 _delta_reasoning / _message_reasoning / unwrap_chat_payload 已适配，单测 TestClineWireCompat 覆盖"
+    },
+    "gateway_routing": "Cline 网关在 14 家推理提供商间做回退路由（实测落在 alibaba，候选含 baseten/fireworks/novita/togetherai/deepinfra 等）→ 输出风格与延迟可能漂移"
+  }
+}

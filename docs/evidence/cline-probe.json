@@ -1,0 +1,39 @@
+{
+  "probed_at": "2026-09-15T00:36:04+0800",
+  "base_url": "https://api.cline.bot/api/v1",
+  "elapsed_sec": 36.1,
+  "effort_candidates": [
+    "none",
+    "minimal",
+    "low",
+    "medium",
+    "high",
+    "xhigh",
+    "max"
+  ],
+  "models": {
+    "deepseek/deepseek-v4.1-flash": {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "responses": {
+        "ok": false,
+        "status": 404,
+        "error": "{\"error\":\"Not Found\",\"success\":false}\n"
+      },
+      "chat": {
+        "ok": false,
+        "status": 500,
+        "error": "{\"error\":\"empty response content\",\"success\":false}\n"
+      },
+      "models_dev": {
+        "name": "DeepSeek V4.1 Flash",
+        "context": 1000000,
+        "output": 384000,
+        "reasoning": true,
+        "attachment": true,
+        "tool_call": true,
+        "in_models_dev": true
+      },
+      "effort": {}
+    }
+  }
+}

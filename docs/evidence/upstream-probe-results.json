@@ -1,0 +1,436 @@
+{
+  "probed_at": "2026-09-11T18:07:38+0800",
+  "base_url": "https://opencode.ai/zen/go/v1",
+  "elapsed_sec": 68.4,
+  "effort_candidates": [
+    "none",
+    "minimal",
+    "low",
+    "medium",
+    "high",
+    "xhigh",
+    "max"
+  ],
+  "models": {
+    "deepseek-flash": {
+      "model": "deepseek-flash",
+      "responses": {
+        "ok": true,
+        "status": 200,
+        "error": null
+      },
+      "chat": {
+        "ok": true,
+        "status": 200,
+        "error": null
+      },
+      "models_dev": {
+        "name": null,
+        "context": null,
+        "output": null,
+        "reasoning": null,
+        "attachment": null,
+        "tool_call": null,
+        "in_models_dev": false
+      },
+      "effort": {
+        "chat": {
+          "none": {
+            "ok": true,
+            "error": null
+          },
+          "minimal": {
+            "ok": true,
+            "error": null
+          },
+          "low": {
+            "ok": true,
+            "error": null
+          },
+          "medium": {
+            "ok": true,
+            "error": null
+          },
+          "high": {
+            "ok": true,
+            "error": null
+          },
+          "xhigh": {
+            "ok": true,
+            "error": null
+          },
+          "max": {
+            "ok": true,
+            "error": null
+          }
+        },
+        "responses": {
+          "none": {
+            "ok": true,
+            "error": null
+          },
+          "minimal": {
+            "ok": true,
+            "error": null
+          },
+          "low": {
+            "ok": true,
+            "error": null
+          },
+          "medium": {
+            "ok": true,
+            "error": null
+          },
+          "high": {
+            "ok": true,
+            "error": null
+          },
+          "xhigh": {
+            "ok": true,
+            "error": null
+          },
+          "max": {
+            "ok": true,
+            "error": null
+          }
+        }
+      }
+    },
+    "deepseek-v4-flash": {
+      "model": "deepseek-v4-flash",
+      "responses": {
+        "ok": true,
+        "status": 200,
+        "error": null
+      },
+      "chat": {
+        "ok": true,
+        "status": 200,
+        "error": null
+      },
+      "models_dev": {
+        "name": "DeepSeek V4 Flash",
+        "context": 1000000,
+        "output": 384000,
+        "reasoning": true,
+        "attachment": false,
+        "tool_call": true,
+        "in_models_dev": true
+      },
+      "effort": {
+        "chat": {
+          "none": {
+            "ok": true,
+            "error": null
+          },
+          "minimal": {
+            "ok": true,
+            "error": null
+          },
+          "low": {
+            "ok": true,
+            "error": null
+          },
+          "medium": {
+            "ok": true,
+            "error": null
+          },
+          "high": {
+            "ok": true,
+            "error": null
+          },
+          "xhigh": {
+            "ok": true,
+            "error": null
+          },
+          "max": {
+            "ok": true,
+            "error": null
+          }
+        },
+        "responses": {
+          "none": {
+            "ok": true,
+            "error": null
+          },
+          "minimal": {
+            "ok": true,
+            "error": null
+          },
+          "low": {
+            "ok": true,
+            "error": null
+          },
+          "medium": {
+            "ok": true,
+            "error": null
+          },
+          "high": {
+            "ok": true,
+            "error": null
+          },
+          "xhigh": {
+            "ok": true,
+            "error": null
+          },
+          "max": {
+            "ok": true,
+            "error": null
+          }
+        }
+      }
+    },
+    "deepseek-v4-flash-vision-exp": {
+      "model": "deepseek-v4-flash-vision-exp",
+      "responses": {
+        "ok": true,
+        "status": 200,
+        "error": null
+      },
+      "chat": {
+        "ok": true,
+        "status": 200,
+        "error": null
+      },
+      "models_dev": {
+        "name": "DeepSeek V4 Flash Vision Exp",
+        "context": 1000000,
+        "output": 384000,
+        "reasoning": true,
+        "attachment": true,
+        "tool_call": true,
+        "in_models_dev": true
+      },
+      "effort": {
+        "chat": {
+          "none": {
+            "ok": true,
+            "error": null
+          },
+          "minimal": {
+            "ok": true,
+            "error": null
+          },
+          "low": {
+            "ok": true,
+            "error": null
+          },
+          "medium": {
+            "ok": true,
+            "error": null
+          },
+          "high": {
+            "ok": true,
+            "error": null
+          },
+          "xhigh": {
+            "ok": true,
+            "error": null
+          },
+          "max": {
+            "ok": true,
+            "error": null
+          }
+        },
+        "responses": {
+          "none": {
+            "ok": true,
+            "error": null
+          },
+          "minimal": {
+            "ok": true,
+            "error": null
+          },
+          "low": {
+            "ok": true,
+            "error": null
+          },
+          "medium": {
+            "ok": true,
+            "error": null
+          },
+          "high": {
+            "ok": true,
+            "error": null
+          },
+          "xhigh": {
+            "ok": true,
+            "error": null
+          },
+          "max": {
+            "ok": true,
+            "error": null
+          }
+        }
+      }
+    },
+    "deepseek-v4-pro": {
+      "model": "deepseek-v4-pro",
+      "responses": {
+        "ok": true,
+        "status": 200,
+        "error": null
+      },
+      "chat": {
+        "ok": true,
+        "status": 200,
+        "error": null
+      },
+      "models_dev": {
+        "name": "DeepSeek V4 Pro (New)",
+        "context": 1000000,
+        "output": 384000,
+        "reasoning": true,
+        "attachment": false,
+        "tool_call": true,
+        "in_models_dev": true
+      },
+      "effort": {
+        "chat": {
+          "none": {
+            "ok": true,
+            "error": null
+          },
+          "minimal": {
+            "ok": true,
+            "error": null
+          },
+          "low": {
+            "ok": true,
+            "error": null
+          },
+          "medium": {
+            "ok": true,
+            "error": null
+          },
+          "high": {
+            "ok": true,
+            "error": null
+          },
+          "xhigh": {
+            "ok": true,
+            "error": null
+          },
+          "max": {
+            "ok": true,
+            "error": null
+          }
+        },
+        "responses": {
+          "none": {
+            "ok": true,
+            "error": null
+          },
+          "minimal": {
+            "ok": true,
+            "error": null
+          },
+          "low": {
+            "ok": true,
+            "error": null
+          },
+          "medium": {
+            "ok": true,
+            "error": null
+          },
+          "high": {
+            "ok": true,
+            "error": null
+          },
+          "xhigh": {
+            "ok": true,
+            "error": null
+          },
+          "max": {
+            "ok": true,
+            "error": null
+          }
+        }
+      }
+    },
+    "deepseek-v4.1-flash": {
+      "model": "deepseek-v4.1-flash",
+      "responses": {
+        "ok": true,
+        "status": 200,
+        "error": null
+      },
+      "chat": {
+        "ok": true,
+        "status": 200,
+        "error": null
+      },
+      "models_dev": {
+        "name": "DeepSeek V4.1 Flash",
+        "context": 1000000,
+        "output": 384000,
+        "reasoning": true,
+        "attachment": true,
+        "tool_call": true,
+        "in_models_dev": true
+      },
+      "effort": {
+        "chat": {
+          "none": {
+            "ok": true,
+            "error": null
+          },
+          "minimal": {
+            "ok": true,
+            "error": null
+          },
+          "low": {
+            "ok": true,
+            "error": null
+          },
+          "medium": {
+            "ok": true,
+            "error": null
+          },
+          "high": {
+            "ok": true,
+            "error": null
+          },
+          "xhigh": {
+            "ok": true,
+            "error": null
+          },
+          "max": {
+            "ok": true,
+            "error": null
+          }
+        },
+        "responses": {
+          "none": {
+            "ok": true,
+            "error": null
+          },
+          "minimal": {
+            "ok": true,
+            "error": null
+          },
+          "low": {
+            "ok": true,
+            "error": null
+          },
+          "medium": {
+            "ok": true,
+            "error": null
+          },
+          "high": {
+            "ok": true,
+            "error": null
+          },
+          "xhigh": {
+            "ok": true,
+            "error": null
+          },
+          "max": {
+            "ok": true,
+            "error": null
+          }
+        }
+      }
+    }
+  }
+}

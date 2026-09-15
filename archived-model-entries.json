@@ -1,0 +1,208 @@
+{
+  "_comment": "从 model-metadata.json 里移除的模型条目（按用户要求只保留 deepseek-v4.1-flash）。要恢复某个模型：把对应条目粘回 model-metadata.json 的 models 数组，再跑 build-router-catalog.py + install-model-router.py。数字均为当时的实测值。",
+  "removed_at": "2026-09-15",
+  "models": [
+    {
+      "slug": "deepseek-v4-pro",
+      "provider": "opencode",
+      "upstream_model": "deepseek-v4-pro",
+      "wire": "responses",
+      "display_name": "DeepSeek V4 Pro",
+      "description": "DeepSeek V4 Pro：DeepSeek 系最强档，长上下文推理与复杂编码任务优先选它。",
+      "context_window": 1048576,
+      "max_context_window": 1048576,
+      "max_output_tokens": 393216,
+      "default_reasoning_level": "medium",
+      "supported_reasoning_levels": [
+        "none",
+        "minimal",
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ],
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "truncation_policy": {
+        "mode": "tokens",
+        "limit": 10000
+      },
+      "supports_parallel_tool_calls": true,
+      "supports_search_tool": true,
+      "supports_reasoning_summaries": true,
+      "shell_type": "unified_exec",
+      "visibility": "list",
+      "priority": 1000,
+      "sources": {
+        "context_window": "实测: 超限请求返回 \"This model's maximum context length is 1048576 tokens\"（models.dev 标称 1000000，为名义值）",
+        "max_output_tokens": "实测: max_tokens=5000000 返回 \"valid range of max_tokens is [1, 393216]\"（models.dev 标称 384000）",
+        "supported_reasoning_levels": "实测: 7 档位均 200，非法值(bogus/123/空) 400；none 档 reasoning_content 缺失=思考关闭",
+        "input_modalities": "实测: 8x8 纯绿 PNG 正确识别，故含 image（models.dev attachment=false 与实际不符）"
+      }
+    },
+    {
+      "slug": "deepseek-v4-flash",
+      "provider": "opencode",
+      "upstream_model": "deepseek-v4-flash",
+      "wire": "responses",
+      "display_name": "DeepSeek V4 Flash",
+      "description": "DeepSeek V4 Flash：V4 代 Flash，长上下文 + 低延迟，适合大批量读写与检索式任务。",
+      "context_window": 1048576,
+      "max_context_window": 1048576,
+      "max_output_tokens": 393216,
+      "default_reasoning_level": "medium",
+      "supported_reasoning_levels": [
+        "none",
+        "minimal",
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ],
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "truncation_policy": {
+        "mode": "tokens",
+        "limit": 10000
+      },
+      "supports_parallel_tool_calls": true,
+      "supports_search_tool": true,
+      "supports_reasoning_summaries": true,
+      "shell_type": "unified_exec",
+      "visibility": "list",
+      "priority": 980,
+      "sources": {
+        "context_window": "实测: 上游报 maximum context length 1048576",
+        "max_output_tokens": "实测: 上游报 max_tokens 有效区间 [1, 393216]",
+        "supported_reasoning_levels": "实测: 7 档位均 200，非法值 400。注意本模型 usage 不返回 reasoning_tokens（恒为 0），但 reasoning_content 有输出",
+        "input_modalities": "实测: 纯色图识别通过"
+      }
+    },
+    {
+      "slug": "deepseek-v4-flash-vision-exp",
+      "provider": "opencode",
+      "upstream_model": "deepseek-v4-flash-vision-exp",
+      "wire": "responses",
+      "display_name": "DeepSeek V4 Flash Vision",
+      "description": "DeepSeek V4 Flash Vision（实验）：面向图像理解优化，截图/视觉验收类任务使用。",
+      "context_window": 1048576,
+      "max_context_window": 1048576,
+      "max_output_tokens": 393216,
+      "default_reasoning_level": "medium",
+      "supported_reasoning_levels": [
+        "none",
+        "minimal",
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ],
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "truncation_policy": {
+        "mode": "tokens",
+        "limit": 10000
+      },
+      "supports_parallel_tool_calls": true,
+      "supports_search_tool": true,
+      "supports_reasoning_summaries": true,
+      "shell_type": "unified_exec",
+      "visibility": "list",
+      "priority": 970,
+      "sources": {
+        "context_window": "实测: 上游报 maximum context length 1048576",
+        "max_output_tokens": "实测: 上游报 max_tokens 有效区间 [1, 393216]",
+        "supported_reasoning_levels": "实测: 7 档位均 200，非法值 400",
+        "input_modalities": "实测: 纯色图识别通过（models.dev 亦标 attachment=true）"
+      }
+    },
+    {
+      "slug": "deepseek-flash",
+      "provider": "opencode",
+      "upstream_model": "deepseek-flash",
+      "wire": "responses",
+      "display_name": "DeepSeek Flash",
+      "description": "DeepSeek Flash：opencode 上的通用快速档，响应快、成本低，适合常规编码与问答。",
+      "context_window": 1048576,
+      "max_context_window": 1048576,
+      "max_output_tokens": 393216,
+      "default_reasoning_level": "medium",
+      "supported_reasoning_levels": [
+        "none",
+        "minimal",
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ],
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "truncation_policy": {
+        "mode": "tokens",
+        "limit": 10000
+      },
+      "supports_parallel_tool_calls": true,
+      "supports_search_tool": true,
+      "supports_reasoning_summaries": true,
+      "shell_type": "unified_exec",
+      "visibility": "list",
+      "priority": 960,
+      "sources": {
+        "context_window": "实测: 上游报 maximum context length 1048576（models.dev 无此模型条目，故完全依赖实测）",
+        "max_output_tokens": "实测: 上游报 max_tokens 有效区间 [1, 393216]",
+        "supported_reasoning_levels": "实测: 7 档位均 200，非法值 400",
+        "input_modalities": "实测: 纯色图识别通过（models.dev 无此模型条目）"
+      }
+    },
+    {
+      "slug": "deepseek-flash-chat",
+      "provider": "opencode",
+      "upstream_model": "deepseek-flash",
+      "wire": "chat",
+      "display_name": "DeepSeek Flash (chat 翻译通道)",
+      "description": "验证用条目：走 chat/completions + Responses 双向翻译，与 deepseek-flash 同一上游模型，用于校验翻译层。",
+      "context_window": 1048576,
+      "max_context_window": 1048576,
+      "max_output_tokens": 393216,
+      "default_reasoning_level": "medium",
+      "supported_reasoning_levels": [
+        "none",
+        "minimal",
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ],
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "truncation_policy": {
+        "mode": "tokens",
+        "limit": 10000
+      },
+      "supports_parallel_tool_calls": true,
+      "supports_search_tool": true,
+      "supports_reasoning_summaries": true,
+      "shell_type": "unified_exec",
+      "visibility": "hide",
+      "priority": 90,
+      "sources": {
+        "all": "与 deepseek-flash 同一上游模型与同一组实测数字；wire=chat 用于验证 Responses<->Chat 翻译层"
+      }
+    }
+  ]
+}

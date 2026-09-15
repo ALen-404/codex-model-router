@@ -1,0 +1,111 @@
+{
+  "version": 1,
+  "_comment": "模型元数据表：这里是唯一的人工维护源。build-router-catalog.py 读它生成 router-routes.json 与 model-catalog.json。所有数字都来自实测或明确来源，见 sources 字段。",
+  "providers": {
+    "opencode": {
+      "name": "OpenCode Zen Go",
+      "upstream_base": "https://opencode.ai/zen/go/v1",
+      "key_env": "OPENCODE_API_KEY",
+      "session_header": {
+        "name": "x-opencode-session",
+        "value": "codex-desktop-local"
+      },
+      "_note": "上游强制要求 x-opencode-session，否则 400 MissingSessionID；User-Agent 用浏览器 UA 以绕过 Cloudflare"
+    },
+    "cline": {
+      "name": "Cline",
+      "upstream_base": "https://api.cline.bot/api/v1",
+      "key_env": "CLINE_API_KEY",
+      "session_header": null,
+      "_note": "订阅制额度，额度走 Cline。实测：只有 /chat/completions 可用（/responses 与 /messages 均 404），故 wire=chat 必须走翻译层；鉴权 Authorization: Bearer <CLINE_API_KEY>；不需要额外会话头。"
+    }
+  },
+  "models": [
+    {
+      "slug": "deepseek-v4.1-flash-opencode",
+      "provider": "opencode",
+      "upstream_model": "deepseek-v4.1-flash",
+      "wire": "responses",
+      "display_name": "DeepSeek V4.1 Flash (opencode)",
+      "description": "DeepSeek V4.1 Flash，额度走 OpenCode Zen Go（Go 计划）。上游原生支持 Responses API，直通不翻译。",
+      "context_window": 1048576,
+      "max_context_window": 1048576,
+      "max_output_tokens": 393216,
+      "default_reasoning_level": "medium",
+      "supported_reasoning_levels": [
+        "none",
+        "minimal",
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ],
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "truncation_policy": {
+        "mode": "tokens",
+        "limit": 10000
+      },
+      "supports_parallel_tool_calls": true,
+      "supports_search_tool": true,
+      "supports_reasoning_summaries": true,
+      "shell_type": "unified_exec",
+      "visibility": "list",
+      "priority": 990,
+      "sources": {
+        "context_window": "实测: 上游报 maximum context length 1048576",
+        "max_output_tokens": "实测: 上游报 max_tokens 有效区间 [1, 393216]",
+        "supported_reasoning_levels": "实测: 7 档位均 200，非法值 400",
+        "input_modalities": "实测: 纯色图识别通过",
+        "slug": "slug 带 -opencode 后缀以和 Cline 的同名模型区分；slug 同时是路由表的键，不能重复"
+      }
+    },
+    {
+      "slug": "deepseek-v4.1-flash-cline",
+      "provider": "cline",
+      "upstream_model": "deepseek/deepseek-v4.1-flash",
+      "wire": "chat",
+      "display_name": "DeepSeek V4.1 Flash (Cline)",
+      "description": "DeepSeek V4.1 Flash，额度走 Cline 订阅。Cline 只提供 chat/completions，由路由器做 Responses 双向翻译。",
+      "context_window": 1048576,
+      "max_context_window": 1048576,
+      "max_output_tokens": 384000,
+      "default_reasoning_level": "medium",
+      "supported_reasoning_levels": [
+        "none",
+        "minimal",
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ],
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "truncation_policy": {
+        "mode": "tokens",
+        "limit": 10000
+      },
+      "supports_parallel_tool_calls": true,
+      "supports_search_tool": true,
+      "supports_reasoning_summaries": true,
+      "shell_type": "unified_exec",
+      "visibility": "list",
+      "priority": 980,
+      "sources": {
+        "wire": "实测: /responses 返回 404 Not Found，只有 /chat/completions 可用 → wire=chat，必须走翻译层",
+        "context_window": "实测: 超限请求上游报 \"This model's maximum context length is 1048576 tokens\"（models.dev 的 cline-pass 标称 1000000，为名义值）",
+        "max_output_tokens": "models.dev cline-pass 标称 384000；实测网关不校验（max_tokens=5000000 仍返回 200），故只能取标称值，此为唯一非实测项",
+        "supported_reasoning_levels": "实测: 7 档全部 200；none 档 reasoning_tokens=0 且 message 无 reasoning 字段（思考关闭），max 档推理量最大(94 tokens)。models.dev 只声明 5 档(none/low/medium/high/xhigh)，以实测为准",
+        "input_modalities": "实测: 8x8 纯品红 PNG 正确识别为 Magenta",
+        "tool_call": "实测: 流式(delta.tool_calls)与非流式(message.tool_calls)均为标准 OpenAI 形状，finish_reason=tool_calls",
+        "shape_diff": "实测两处与 opencode 不同：推理字段叫 reasoning（非 reasoning_content，另有 reasoning_details）；非流式响应包一层 {data:..., success:true}，流式不包。翻译层已适配"
+      }
+    }
+  ]
+}
