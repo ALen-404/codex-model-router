@@ -27,11 +27,11 @@
       "context_window": 1048576,
       "max_output_tokens": 393216
     },
-    "deepseek-v4-flash-cline": {
+    "deepseek-v4.1-flash-cline": {
       "upstream_base": "https://api.cline.bot/api/v1",
       "path": "/chat/completions",
       "key_env": "CLINE_API_KEY",
-      "upstream_model": "cline-pass/deepseek-v4-flash",
+      "upstream_model": "cline-pass/deepseek-v4.1-flash",
       "wire": "chat",
       "effort_levels": [
         "none",
@@ -43,7 +43,7 @@
         "max"
       ],
       "session_header": null,
-      "display_name": "DeepSeek V4 Flash (Cline Pass)",
+      "display_name": "DeepSeek V4.1 Flash (Cline Pass)",
       "context_window": 1048576,
       "max_output_tokens": 384000
     }
