@@ -6,7 +6,7 @@
 | 上游 | 端点 | 协议 | 模型 |
 |---|---|---|---|
 | opencode（Go 计划） | `https://opencode.ai/zen/go/v1` | responses 直通 | **`deepseek-v4.1-flash-opencode`** |
-| Cline **Pass 订阅** | `https://api.cline.bot/api/v1` | **chat + 双向翻译**（Cline 不提供 /responses） | **`deepseek-v4-flash-cline`** |
+| Cline **Pass 订阅** | `https://api.cline.bot/api/v1` | **chat + 双向翻译**（Cline 不提供 /responses） | **`deepseek-v4.1-flash-cline`** |
 
 - 只依赖 Python 标准库，无第三方包
 - 密钥只放用户级环境变量：`OPENCODE_API_KEY`、`CLINE_API_KEY`
@@ -107,38 +107,42 @@ Codex 的一个 provider 只能绑定一种 wire 协议（`wire_api = "responses
 | `show-context-window-usage` | 合法设置键 | app.asar 内设置定义为 `key: 'show-context-window-usage'`（kebab） |
 | `model_catalog_json` | 合法配置键 | codex.exe（21 处）与 app.asar（4 处）均含 |
 
-### Cline Pass（`cline-pass/deepseek-v4-flash`）的数字来源
+### Cline Pass（`cline-pass/deepseek-v4.1-flash`）的数字来源
 
-**先说最容易踩的：Cline 的订阅制模型 ID 必须带 `cline-pass/` 前缀。** 这也是接错一轮的根源——
-用裸 ID `deepseek/deepseek-v4-flash` 会得到 **403 `only available via Cline product surfaces`**，
-看起来像"订阅没法在外部用"，实际上只是 ID 不对。完整模型表见
-https://docs.cline.bot/getting-started/clinepass （"Using ClinePass outside of Cline" 一节明确
-写了可以从自己的脚本/应用里用 API 调 Pass 模型）。
+**规则一：Cline 订阅制模型的 ID 必须带 `cline-pass/` 前缀。** 文档有专门一节
+"Using ClinePass outside of Cline" 说明可以从自己的脚本/应用用 API 调 Pass 模型。
+不带前缀会得到 **403 `only available via Cline product surfaces`**——这**不代表**订阅不能用，
+只是 ID 不对。
 
-Pass 清单里只有两个 DeepSeek 模型：`cline-pass/deepseek-v4-pro`、`cline-pass/deepseek-v4-flash`。
-**没有 V4.1 Flash**——想要 V4.1 Flash 只能走按量付费（Cline Credits）。
+**规则二：官方文档的模型表不全，以实测为准。** 官网 clinepass 页的表格只列了 13 个模型
+（DeepSeek 只有 V4 Pro / V4 Flash），但实测 **`cline-pass/deepseek-v4.1-flash` 同样可用**（200）。
+models.dev 的 `cline-pass` 节点列了 15 个、包含它——**这一次是 models.dev 比官方文档准**。
 
-| 数字 | 值 | 来源 |
-|---|---|---|
-| 模型 ID | `cline-pass/deepseek-v4-flash` | 文档给的 Pass 模型表；实测 200 |
-| `wire` | **`chat`** | 实测：`POST /api/v1/responses` 与 `/api/v1/messages` 均 **404**，只有 `/chat/completions` 可用 → 必须走翻译层 |
-| 上下文上限 | **1 048 576** | 实测：超限请求上游报 `max_model_len=1048576`（模型自报为 `DeepSeek-V4-Flash-0731-Fast`） |
-| 最大输出 | 384 000 | **非实测项**：models.dev `cline-pass` 标称值。网关不校验 `max_tokens`，拿不到强制上限 |
-| 思考档位 | `none…max` 共 7 档 | 实测：7 档全部 200；`none` 档 `reasoning_tokens=0` 且无 `reasoning` 字段（思考真关闭），其余档位有推理输出；非法值 `bogus` 返回 500 |
-| 图片输入 | **不支持** | 实测：给 8×8 纯蓝 PNG，Pass 通道的 `v4-flash` 与 `v4-pro` 分别答 `orange` / `Gold`，**都错** → 图片被网关丢弃。models.dev 标 `attachment=false`，与实测一致。对比：按量付费的 `deepseek/deepseek-v4.1-flash` 能正确识别颜色 |
-| 工具调用 | 支持 | 实测：流式 `delta.tool_calls` 标准 OpenAI 形状，`finish_reason=tool_calls` |
-| 响应结构差异 | 见 §6 坑 6 | 实测：推理字段叫 `reasoning`（非 `reasoning_content`）；非流式响应外包一层 `{"data":…,"success":true}` |
-
-**两个错码含义完全不同，别混**：
+两个错码含义完全不同：
 
 | 返回 | 含义 |
 |---|---|
-| **403** `API_REQUEST_ERROR_CODE`/`only available via Cline product surfaces` | 模型 ID 少了 `cline-pass/` 前缀（或该模型只能从 Cline 客户端调用） |
-| **402** `insufficient_credits` | 该模型不归 Pass 管，落到按量付费的 Cline Credits，余额不足 |
+| **403** `only available via Cline product surfaces` | 模型 ID 少了 `cline-pass/` 前缀 |
+| **402** `insufficient_credits` | 该模型不归 Pass 管，落到按量付费的 Cline Credits |
+
+| 数字 | 值 | 来源 |
+|---|---|---|
+| 模型 ID | `cline-pass/deepseek-v4.1-flash` | 实测 200；`is_byok=False` 说明走 Cline 自有凭据（订阅通道），不是 credits |
+| `wire` | **`chat`** | 实测：`POST /api/v1/responses` 与 `/api/v1/messages` 均 **404**，只有 `/chat/completions` 可用 → 必须走翻译层 |
+| 上下文上限 | **1 048 576** | 实测：超限请求上游报 `This model's maximum context length is 1048576 tokens` |
+| 最大输出 | 384 000 | **非实测项**：models.dev `cline-pass` 标称值。网关不校验 `max_tokens`，拿不到强制上限 |
+| 思考档位 | `none…max` 共 7 档 | 实测（用需要推理的问题各测 3 次）：`none` 档 `reasoning_tokens` 恒为 0 且无 `reasoning` 字段（思考真关闭），其余 6 档均产生约 1000~2900 推理 token；非法值 `bogus` 返回 500 |
+| 图片输入 | **支持** | 实测：8×8 纯蓝/纯红 PNG 均正确答出颜色，rollout 里可见 `function_call view_image` 与含 `input_image` 的工具返回 |
+| 工具调用 | 支持 | 实测：流式 `delta.tool_calls` 标准形状，`finish_reason=tool_calls` |
+| 响应结构差异 | 见 §6 坑 6 | 实测：推理字段叫 `reasoning`（非 `reasoning_content`）；非流式响应外包一层 `{"data":…,"success":true}` |
+
+**注意同上游不同模型的差异**：`cline-pass/deepseek-v4-flash` 实测**不支持图片**
+（给纯蓝图答成 `orange`），而 `cline-pass/deepseek-v4.1-flash` 支持。所以
+`input_modalities` 必须按模型逐个实测，不能照抄同族。
 
 **实测手法提醒**：Cline 只要正文抽不出来就回 500 `empty response content`。给 `max_tokens`
-太小（思考把预算吃光）会撞这个错，**图片测试尤其容易被误判成"不支持图片"**——必须给足输出预算
-并确认模型答对了（拿纯色图，看颜色对不对）。
+太小（思考把预算吃光）会撞这个错，**很容易被误判成"不支持图片"或"不支持某档位"**——
+必须给足输出预算、用已知答案的样本（纯色图看颜色对不对）、并对可疑项多测几次取多数。
 
 > 上表中 `deepseek-v4-pro` / `deepseek-flash` 等模型名是**当时探测时**的记录，这些模型现已按用户要求归档（见 `archived-model-entries.json`），保留原文以便追溯数字来源。
 
@@ -200,7 +204,7 @@ powershell -ExecutionPolicy Bypass -File check-model-router.ps1
 
 ### 例：Cline Pass 的 `cline-pass/deepseek-v4-flash`（已完成，可作模板）
 
-Cline 已接入，slug 是 **`deepseek-v4-flash-cline`**（不能直接用上游 id，因为 slug 同时是路由表的键）。
+Cline 已接入，slug 是 **`deepseek-v4.1-flash-cline`**（不能直接用上游 id，因为 slug 同时是路由表的键）。
 它是**唯一走 `wire="chat"` 的正式条目**，所以也是翻译层的实战路径。
 
 如果以后要换 key 或加 Cline 的别的模型，流程是：
@@ -331,7 +335,7 @@ deepseek 系 21 个。
 - **只接了 DeepSeek 系**。opencode 端点还有 31 个非 DeepSeek 模型（GLM / Kimi / Qwen /
   MiniMax / Grok 等），按同样流程加元数据即可接入，但本次未纳入。
 - **目录里 5 个模型全部按 `wire="responses"` 直通**，所以它们走不到翻译层；
-  翻译层由 **`deepseek-v4-flash-cline`** 承载 —— Cline 只提供 chat/completions，
+  翻译层由 **`deepseek-v4.1-flash-cline`** 承载 —— Cline 只提供 chat/completions，
   所以它是正式条目里唯一走 `wire="chat"` 的，翻译层是它的必经路径而非备用通道。
 - **`deepseek-v4-flash` 的 usage 不返回 `reasoning_tokens`**（恒为 0），但
   `reasoning_content` 有输出。想看思考内容不要依赖 token 计数。
@@ -372,7 +376,7 @@ taskkill /PID $(cat ~/.codex/model-router/router.pid) /F
 | # | 验证项 | 结果 |
 |---|---|---|
 | 1 | 翻译层单元测试 | `Ran 33 tests — OK`（含并行调用合并、图片拆分、配对、档位夹取、SSE 事件序列、请求归一化） |
-| 2 | `codex exec -m` 工具调用 | 两条通道都通过：`-m deepseek-v4.1-flash-opencode`（responses 直通，回读 `OC-OK`）与 `-m deepseek-v4-flash-cline`（chat 翻译，回读 `PASS-E2E-OK`）；升级到 CLI 0.154.0-alpha.6.2 后复测仍通过 |
+| 2 | `codex exec -m` 工具调用 | 两条通道都通过：`-m deepseek-v4.1-flash-opencode`（responses 直通，回读 `OC-OK`）与 `-m deepseek-v4.1-flash-cline`（chat 翻译，回读 `PASS-E2E-OK`）；升级到 CLI 0.154.0-alpha.6.2 后复测仍通过 |
 | 3 | `view_image` 看纯色图 | 两条通道都通过，且从 rollout 坐实真调了工具：`function_call view_image` + 工具返回含 `input_image`；chat 通道另在路由器日志中留下 `split 1 image(s) out of tool result` |
 | 4 | 约 10 万 token 请求 | `input_tokens = 100,023`，`status = completed`，收到 `response.completed` |
 | 5 | `codex debug models` | 6 个条目全部出现，`context_window = 1048576`、7 个档位、visibility 正确 |
@@ -383,8 +387,8 @@ taskkill /PID $(cat ~/.codex/model-router/router.pid) /F
 | 10 | 坏目录致 `config_load` 失败 | 修复前：新版 CLI `exit=1` + `unknown variant hidden` / `duplicate field visibility`；修复后：`exit=0`、stderr 为空、6 个模型全部解析 |
 | 11 | 安装脚本不覆盖用户选择 | 二次安装输出「配置改动（无，已是目标状态）」，`model = "deepseek-v4.1-flash"` 原样保留 |
 | 12 | pid 文件自愈 | pid 文件记的是已死进程、端口实际由另一个实例服务时，安装脚本与健康检查都会按端口占用者修正 |
-| 13 | Cline 接入：目录解析 | `codex debug models` `exit=0`、2 个模型（两个上游各一条），含 `deepseek-v4-flash-cline` |
-| 14 | Cline 接入：端到端工具调用 | `codex exec -m deepseek-v4-flash-cline` 执行 `echo` 并回读 `PASS-E2E-OK`；路由器日志 `翻译转发 -> https://api.cline.bot/api/v1/chat/completions` |
+| 13 | Cline 接入：目录解析 | `codex debug models` `exit=0`、2 个模型（两个上游各一条），含 `deepseek-v4.1-flash-cline` |
+| 14 | Cline 接入：端到端工具调用 | `codex exec -m deepseek-v4.1-flash-cline` 执行 `echo` 并回读 `PASS-E2E-OK`；路由器日志 `翻译转发 -> https://api.cline.bot/api/v1/chat/completions` |
 | 15 | Cline 接入：工具图片走 chat 翻译 | 从 rollout 坐实：`function_call view_image` + 工具返回含 `input_image`；模型对纯绿图正确答出「绿色」 |
 | 16 | 翻译层 Cline 方言适配 | 单元测试 `TestClineWireCompat`（7 项）覆盖 `reasoning` 字段、`reasoning_details` 数组、`data` 包装解包、Cline 形状的流式工具调用；全套 **41 项通过** |
 | 17 | 全量健康检查 | **通过 19，失败 0，警告 0**，2 个模型端到端全部 `completed`（路由表从 7 条精简到 2 条后检查项相应减少） |
@@ -424,7 +428,7 @@ powershell -ExecutionPolicy Bypass -File check-model-router.ps1
 | 请求 403 | 上游 Cloudflare：确认 UA 是浏览器 UA（路由器默认已带） |
 | 请求 400 `Invalid input`（chat 通道） | 工具结果里混了图片：查日志有没有 `split N image(s) out of tool result` |
 | 400 `reasoning_content` 相关 | wire=chat 的多轮工具续聊：`ReasoningCache` 是否命中（重启路由器会导致未命中，但有占位兜底不应 400） |
-| 上游报 **`403`** `only available via Cline product surfaces` | **模型 ID 用错了**：Cline 的订阅制模型必须带 **`cline-pass/` 前缀**（如 `cline-pass/deepseek-v4-flash`）。裸 ID（`deepseek/deepseek-v4-flash`）走的是另一条只给 Cline 客户端用的通道。完整模型表见 https://docs.cline.bot/getting-started/clinepass |
+| 上游报 **`403`** `only available via Cline product surfaces` | **模型 ID 少了 `cline-pass/` 前缀**（如应写 `cline-pass/deepseek-v4.1-flash`）。注意官方文档的模型表不全，表里没有的 ID 也可能可用 —— 以实测为准 |
 | 上游报 `402 insufficient_credits` | **账户余额不足，不是路由器/配置故障。** 健康检查会明确标注余额与「不是路由器故障」，充值入口见错误里的 `buy_credits_url`（Cline 是 `app.cline.bot/credits`）。订阅若挂在别的账号/组织下也会表现为余额为 0，可用 `GET /api/v1/users/me` 核对账号身份 |
 | 返回 `incomplete` 而不是 `completed` | 思考模型把 `max_output_tokens` 烧在推理上了。要么加大预算，要么传 `reasoning.effort = "none"` |
 | 400 档位非法 | 请求的 `reasoning.effort` 不在白名单：路由器会夹到最近合法档位 |
