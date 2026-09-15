@@ -64,12 +64,12 @@
       }
     },
     {
-      "slug": "deepseek-v4.1-flash-cline",
+      "slug": "deepseek-v4-flash-cline",
       "provider": "cline",
-      "upstream_model": "deepseek/deepseek-v4.1-flash",
+      "upstream_model": "cline-pass/deepseek-v4-flash",
       "wire": "chat",
-      "display_name": "DeepSeek V4.1 Flash (Cline)",
-      "description": "DeepSeek V4.1 Flash，额度走 Cline 订阅。Cline 只提供 chat/completions，由路由器做 Responses 双向翻译。",
+      "display_name": "DeepSeek V4 Flash (Cline Pass)",
+      "description": "DeepSeek V4 Flash，额度走 Cline Pass 订阅（$9.99/月，Pass 不覆盖 V4.1 Flash）。Cline 只提供 chat/completions，由路由器做 Responses 双向翻译。不支持图片输入。",
       "context_window": 1048576,
       "max_context_window": 1048576,
       "max_output_tokens": 384000,
@@ -84,8 +84,7 @@
         "max"
       ],
       "input_modalities": [
-        "text",
-        "image"
+        "text"
       ],
       "truncation_policy": {
         "mode": "tokens",
@@ -98,13 +97,12 @@
       "visibility": "list",
       "priority": 980,
       "sources": {
-        "wire": "实测: /responses 返回 404 Not Found，只有 /chat/completions 可用 → wire=chat，必须走翻译层",
-        "context_window": "实测: 超限请求上游报 \"This model's maximum context length is 1048576 tokens\"（models.dev 的 cline-pass 标称 1000000，为名义值）",
-        "max_output_tokens": "models.dev cline-pass 标称 384000；实测网关不校验（max_tokens=5000000 仍返回 200），故只能取标称值，此为唯一非实测项",
-        "supported_reasoning_levels": "实测: 7 档全部 200；none 档 reasoning_tokens=0 且 message 无 reasoning 字段（思考关闭），max 档推理量最大(94 tokens)。models.dev 只声明 5 档(none/low/medium/high/xhigh)，以实测为准",
-        "input_modalities": "实测: 8x8 纯品红 PNG 正确识别为 Magenta",
-        "tool_call": "实测: 流式(delta.tool_calls)与非流式(message.tool_calls)均为标准 OpenAI 形状，finish_reason=tool_calls",
-        "shape_diff": "实测两处与 opencode 不同：推理字段叫 reasoning（非 reasoning_content，另有 reasoning_details）；非流式响应包一层 {data:..., success:true}，流式不包。翻译层已适配"
+        "upstream_model": "文档 https://docs.cline.bot/getting-started/clinepass 「Using ClinePass outside of Cline」给出 Pass 模型 ID 必须带 cline-pass/ 前缀。实测 cline-pass/deepseek-v4-flash 与 -v4-pro 均 200；而裸 ID deepseek/deepseek-v4-flash 返回 403（「only available via Cline product surfaces」）、deepseek/deepseek-v4.1-flash 返回 402（不在 Pass 清单，落按量付费）",
+        "context_window": "实测：超限请求上游报 \"max_model_len=1048576\"（模型自报为 DeepSeek-V4-Flash-0731-Fast）",
+        "max_output_tokens": "models.dev cline-pass 标称 384000；未实测（网关不校验 max_tokens）",
+        "supported_reasoning_levels": "实测：7 档全部 200；none 档 reasoning_tokens=0 且无 reasoning 字段（思考关闭），其余档位有推理输出；非法值 bogus 返回 500",
+        "input_modalities": "实测：8x8 纯蓝 PNG，Pass 通道两个模型分别答 orange / Gold，均错误 -> 图片被网关丢弃，Pass 通道不支持图片。models.dev 对 cline-pass/deepseek-v4-flash 标 attachment=false，与实测一致",
+        "tool_call": "实测：流式 delta.tool_calls 标准形状，finish_reason=tool_calls"
       }
     }
   ]

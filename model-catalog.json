@@ -75,9 +75,9 @@
       }
     },
     {
-      "slug": "deepseek-v4.1-flash-cline",
-      "display_name": "DeepSeek V4.1 Flash (Cline)",
-      "description": "DeepSeek V4.1 Flash，额度走 Cline 订阅。Cline 只提供 chat/completions，由路由器做 Responses 双向翻译。",
+      "slug": "deepseek-v4-flash-cline",
+      "display_name": "DeepSeek V4 Flash (Cline Pass)",
+      "description": "DeepSeek V4 Flash，额度走 Cline Pass 订阅（$9.99/月，Pass 不覆盖 V4.1 Flash）。Cline 只提供 chat/completions，由路由器做 Responses 双向翻译。不支持图片输入。",
       "context_window": 1048576,
       "max_context_window": 1048576,
       "default_reasoning_level": "medium",
@@ -112,8 +112,7 @@
         }
       ],
       "input_modalities": [
-        "text",
-        "image"
+        "text"
       ],
       "truncation_policy": {
         "mode": "tokens",
