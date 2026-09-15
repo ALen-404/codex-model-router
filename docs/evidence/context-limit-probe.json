@@ -1,0 +1,31 @@
+{
+  "context_limit": {
+    "deepseek-flash": 1048576,
+    "deepseek-v4-flash": 1048576,
+    "deepseek-v4-flash-vision-exp": 1048576,
+    "deepseek-v4-pro": 1048576,
+    "deepseek-v4.1-flash": 1048576
+  },
+  "output_probe": {
+    "deepseek-flash": [
+      400,
+      "Error from provider (Console Go): Upstream request failed: [invalid_request_error] Invalid max_tokens value, the valid range of max_tokens is [1, 393216]"
+    ],
+    "deepseek-v4-flash": [
+      400,
+      "Error from provider (Console Go): Upstream request failed: [invalid_request_error] Invalid max_tokens value, the valid range of max_tokens is [1, 393216]"
+    ],
+    "deepseek-v4-flash-vision-exp": [
+      400,
+      "Error from provider (Console Go): Upstream request failed: [invalid_request_error] Invalid max_tokens value, the valid range of max_tokens is [1, 393216]"
+    ],
+    "deepseek-v4-pro": [
+      400,
+      "Error from provider (Console Go): Upstream request failed: [invalid_request_error] Invalid max_tokens value, the valid range of max_tokens is [1, 393216]"
+    ],
+    "deepseek-v4.1-flash": [
+      400,
+      "Error from provider (Console Go): Upstream request failed: [invalid_request_error] Invalid max_tokens value, the valid range of max_tokens is [1, 393216]"
+    ]
+  }
+}

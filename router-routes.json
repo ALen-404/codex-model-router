@@ -1,0 +1,51 @@
+{
+  "version": 1,
+  "host": "127.0.0.1",
+  "port": 8791,
+  "generated_by": "build-router-catalog.py",
+  "routes": {
+    "deepseek-v4.1-flash-opencode": {
+      "upstream_base": "https://opencode.ai/zen/go/v1",
+      "path": "/responses",
+      "key_env": "OPENCODE_API_KEY",
+      "upstream_model": "deepseek-v4.1-flash",
+      "wire": "responses",
+      "effort_levels": [
+        "none",
+        "minimal",
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ],
+      "session_header": {
+        "name": "x-opencode-session",
+        "value": "codex-desktop-local"
+      },
+      "display_name": "DeepSeek V4.1 Flash (opencode)",
+      "context_window": 1048576,
+      "max_output_tokens": 393216
+    },
+    "deepseek-v4.1-flash-cline": {
+      "upstream_base": "https://api.cline.bot/api/v1",
+      "path": "/chat/completions",
+      "key_env": "CLINE_API_KEY",
+      "upstream_model": "deepseek/deepseek-v4.1-flash",
+      "wire": "chat",
+      "effort_levels": [
+        "none",
+        "minimal",
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ],
+      "session_header": null,
+      "display_name": "DeepSeek V4.1 Flash (Cline)",
+      "context_window": 1048576,
+      "max_output_tokens": 384000
+    }
+  }
+}

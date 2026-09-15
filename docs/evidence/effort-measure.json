@@ -1,0 +1,187 @@
+{
+  "deepseek-flash": {
+    "none": {
+      "reasoning_tokens": 0,
+      "has_reasoning_content": false,
+      "output_tokens": 142
+    },
+    "minimal": {
+      "reasoning_tokens": 71,
+      "has_reasoning_content": true,
+      "output_tokens": 141
+    },
+    "low": {
+      "reasoning_tokens": 52,
+      "has_reasoning_content": true,
+      "output_tokens": 120
+    },
+    "medium": {
+      "reasoning_tokens": 51,
+      "has_reasoning_content": true,
+      "output_tokens": 120
+    },
+    "high": {
+      "reasoning_tokens": 51,
+      "has_reasoning_content": true,
+      "output_tokens": 120
+    },
+    "xhigh": {
+      "reasoning_tokens": 71,
+      "has_reasoning_content": true,
+      "output_tokens": 141
+    },
+    "max": {
+      "reasoning_tokens": 76,
+      "has_reasoning_content": true,
+      "output_tokens": 135
+    }
+  },
+  "deepseek-v4-flash": {
+    "none": {
+      "reasoning_tokens": 0,
+      "has_reasoning_content": false,
+      "output_tokens": 148
+    },
+    "minimal": {
+      "reasoning_tokens": 0,
+      "has_reasoning_content": true,
+      "output_tokens": 147
+    },
+    "low": {
+      "reasoning_tokens": 0,
+      "has_reasoning_content": true,
+      "output_tokens": 175
+    },
+    "medium": {
+      "reasoning_tokens": 0,
+      "has_reasoning_content": true,
+      "output_tokens": 134
+    },
+    "high": {
+      "reasoning_tokens": 0,
+      "has_reasoning_content": true,
+      "output_tokens": 137
+    },
+    "xhigh": {
+      "reasoning_tokens": 0,
+      "has_reasoning_content": true,
+      "output_tokens": 143
+    },
+    "max": {
+      "reasoning_tokens": 0,
+      "has_reasoning_content": true,
+      "output_tokens": 179
+    }
+  },
+  "deepseek-v4-flash-vision-exp": {
+    "none": {
+      "reasoning_tokens": 0,
+      "has_reasoning_content": false,
+      "output_tokens": 129
+    },
+    "minimal": {
+      "reasoning_tokens": 50,
+      "has_reasoning_content": true,
+      "output_tokens": 118
+    },
+    "low": {
+      "reasoning_tokens": 51,
+      "has_reasoning_content": true,
+      "output_tokens": 124
+    },
+    "medium": {
+      "reasoning_tokens": 66,
+      "has_reasoning_content": true,
+      "output_tokens": 135
+    },
+    "high": {
+      "reasoning_tokens": 57,
+      "has_reasoning_content": true,
+      "output_tokens": 126
+    },
+    "xhigh": {
+      "reasoning_tokens": 59,
+      "has_reasoning_content": true,
+      "output_tokens": 128
+    },
+    "max": {
+      "reasoning_tokens": 67,
+      "has_reasoning_content": true,
+      "output_tokens": 127
+    }
+  },
+  "deepseek-v4-pro": {
+    "none": {
+      "reasoning_tokens": 0,
+      "has_reasoning_content": false,
+      "output_tokens": 130
+    },
+    "minimal": {
+      "reasoning_tokens": 71,
+      "has_reasoning_content": true,
+      "output_tokens": 158
+    },
+    "low": {
+      "reasoning_tokens": 80,
+      "has_reasoning_content": true,
+      "output_tokens": 168
+    },
+    "medium": {
+      "reasoning_tokens": 73,
+      "has_reasoning_content": true,
+      "output_tokens": 161
+    },
+    "high": {
+      "reasoning_tokens": 66,
+      "has_reasoning_content": true,
+      "output_tokens": 152
+    },
+    "xhigh": {
+      "reasoning_tokens": 78,
+      "has_reasoning_content": true,
+      "output_tokens": 168
+    },
+    "max": {
+      "reasoning_tokens": 119,
+      "has_reasoning_content": true,
+      "output_tokens": 190
+    }
+  },
+  "deepseek-v4.1-flash": {
+    "none": {
+      "reasoning_tokens": 0,
+      "has_reasoning_content": false,
+      "output_tokens": 110
+    },
+    "minimal": {
+      "reasoning_tokens": 113,
+      "has_reasoning_content": true,
+      "output_tokens": 166
+    },
+    "low": {
+      "reasoning_tokens": 48,
+      "has_reasoning_content": true,
+      "output_tokens": 118
+    },
+    "medium": {
+      "reasoning_tokens": 62,
+      "has_reasoning_content": true,
+      "output_tokens": 134
+    },
+    "high": {
+      "reasoning_tokens": 53,
+      "has_reasoning_content": true,
+      "output_tokens": 127
+    },
+    "xhigh": {
+      "reasoning_tokens": 67,
+      "has_reasoning_content": true,
+      "output_tokens": 138
+    },
+    "max": {
+      "reasoning_tokens": 90,
+      "has_reasoning_content": true,
+      "output_tokens": 158
+    }
+  }
+}
